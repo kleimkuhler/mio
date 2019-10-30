@@ -3,7 +3,7 @@
 mod util;
 
 use log::warn;
-use mio::net::{UnixDatagram, UnixListener, UnixStream};
+use mio::unix::net::{UnixDatagram, UnixListener, UnixStream};
 use mio::unix::SocketAddr;
 use mio::{Interests, Token};
 use std::io::{self, IoSlice, IoSliceMut, Read, Write};

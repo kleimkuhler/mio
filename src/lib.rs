@@ -108,13 +108,17 @@
 //! ```
 
 mod interests;
+mod net_common;
 mod poll;
 mod sys;
 mod token;
 mod waker;
 
 pub mod event;
-pub mod net;
+pub mod net {
+    //! Networking primitives
+    pub use crate::net_common::{TcpListener, TcpStream, UdpSocket};
+}
 
 pub use event::Events;
 pub use interests::Interests;
@@ -125,6 +129,10 @@ pub use waker::Waker;
 #[cfg(unix)]
 pub mod unix {
     //! Unix only extensions.
+    pub mod net {
+        //! Unix only networking primitives
+        pub use crate::net_common::{UnixDatagram, UnixListener, UnixStream};
+    }
     pub use crate::sys::SocketAddr;
     pub use crate::sys::SourceFd;
 }
