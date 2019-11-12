@@ -627,6 +627,39 @@ fn send_packets(
     })
 }
 
+#[test]
+fn udp_socket_empty_message() {
+    let (mut poll, mut events) = init_with_poll();
+
+    let socket1 = assert_ok!(UdpSocket::bind(any_local_address()));
+    let addr1 = assert_ok!(socket1.local_addr());
+    let socket2 = assert_ok!(UdpSocket::bind(any_local_address()));
+    let addr2 = assert_ok!(socket2.local_addr());
+
+    assert_ok!(poll
+        .registry()
+        .register(&socket1, Token(0), Interests::READABLE,));
+    assert_ok!(poll
+        .registry()
+        .register(&socket2, Token(1), Interests::READABLE,));
+    expect_no_events(&mut poll, &mut events);
+
+    let mut buf = [0; 16];
+    let empty = b"";
+
+    assert_ok!(socket1.send_to(empty, addr2));
+    expect_events(
+        &mut poll,
+        &mut events,
+        vec![ExpectEvent::new(Token(1), Interests::READABLE)],
+    );
+
+    let (received, received_from) = assert_ok!(socket2.recv_from(&mut buf));
+    assert_eq!(received, 0);
+    assert_eq!(buf[..received], b""[..]);
+    assert_eq!(received_from, addr1);
+}
+
 pub struct UdpHandlerSendRecv {
     tx: UdpSocket,
     rx: UdpSocket,
