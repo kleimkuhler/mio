@@ -84,12 +84,17 @@ use std::os::unix::io::RawFd;
 pub struct SourceFd<'a>(pub &'a RawFd);
 
 impl<'a> event::Source for SourceFd<'a> {
-    fn register(&self, registry: &Registry, token: Token, interests: Interests) -> io::Result<()> {
+    fn register(
+        &mut self,
+        registry: &Registry,
+        token: Token,
+        interests: Interests,
+    ) -> io::Result<()> {
         poll::selector(registry).register(*self.0, token, interests)
     }
 
     fn reregister(
-        &self,
+        &mut self,
         registry: &Registry,
         token: Token,
         interests: Interests,
@@ -97,7 +102,7 @@ impl<'a> event::Source for SourceFd<'a> {
         poll::selector(registry).reregister(*self.0, token, interests)
     }
 
-    fn deregister(&self, registry: &Registry) -> io::Result<()> {
+    fn deregister(&mut self, registry: &Registry) -> io::Result<()> {
         poll::selector(registry).deregister(*self.0)
     }
 }

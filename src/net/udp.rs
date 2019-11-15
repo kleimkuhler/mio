@@ -518,14 +518,19 @@ impl UdpSocket {
 }
 
 impl event::Source for UdpSocket {
-    fn register(&self, registry: &Registry, token: Token, interests: Interests) -> io::Result<()> {
+    fn register(
+        &mut self,
+        registry: &Registry,
+        token: Token,
+        interests: Interests,
+    ) -> io::Result<()> {
         #[cfg(debug_assertions)]
         self.selector_id.associate_selector(registry)?;
         self.sys.register(registry, token, interests)
     }
 
     fn reregister(
-        &self,
+        &mut self,
         registry: &Registry,
         token: Token,
         interests: Interests,
@@ -533,7 +538,7 @@ impl event::Source for UdpSocket {
         self.sys.reregister(registry, token, interests)
     }
 
-    fn deregister(&self, registry: &Registry) -> io::Result<()> {
+    fn deregister(&mut self, registry: &Registry) -> io::Result<()> {
         self.sys.deregister(registry)
     }
 }

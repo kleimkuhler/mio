@@ -482,7 +482,7 @@ impl Registry {
     /// }
     /// # }
     /// ```
-    pub fn register<S>(&self, source: &S, token: Token, interests: Interests) -> io::Result<()>
+    pub fn register<S>(&self, source: &mut S, token: Token, interests: Interests) -> io::Result<()>
     where
         S: event::Source + ?Sized,
     {
@@ -548,7 +548,12 @@ impl Registry {
     /// [`register`]: #method.register
     /// [`readable`]: crate::event::Event::is_readable
     /// [`writable`]: crate::event::Event::is_writable
-    pub fn reregister<S>(&self, source: &S, token: Token, interests: Interests) -> io::Result<()>
+    pub fn reregister<S>(
+        &self,
+        source: &mut S,
+        token: Token,
+        interests: Interests,
+    ) -> io::Result<()>
     where
         S: event::Source + ?Sized,
     {
@@ -606,7 +611,7 @@ impl Registry {
     /// #     Ok(())
     /// # }
     /// ```
-    pub fn deregister<S>(&self, source: &S) -> io::Result<()>
+    pub fn deregister<S>(&self, source: &mut S) -> io::Result<()>
     where
         S: event::Source + ?Sized,
     {

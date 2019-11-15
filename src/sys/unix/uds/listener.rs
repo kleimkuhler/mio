@@ -134,21 +134,26 @@ impl UnixListener {
 }
 
 impl Source for UnixListener {
-    fn register(&self, registry: &Registry, token: Token, interests: Interests) -> io::Result<()> {
-        SourceFd(&self.as_raw_fd()).register(registry, token, interests)
-    }
-
-    fn reregister(
-        &self,
+    fn register(
+        &mut self,
         registry: &Registry,
         token: Token,
         interests: Interests,
     ) -> io::Result<()> {
-        SourceFd(&self.as_raw_fd()).reregister(registry, token, interests)
+        SourceFd(&mut self.as_raw_fd()).register(registry, token, interests)
     }
 
-    fn deregister(&self, registry: &Registry) -> io::Result<()> {
-        SourceFd(&self.as_raw_fd()).deregister(registry)
+    fn reregister(
+        &mut self,
+        registry: &Registry,
+        token: Token,
+        interests: Interests,
+    ) -> io::Result<()> {
+        SourceFd(&mut self.as_raw_fd()).reregister(registry, token, interests)
+    }
+
+    fn deregister(&mut self, registry: &Registry) -> io::Result<()> {
+        SourceFd(&mut self.as_raw_fd()).deregister(registry)
     }
 }
 
