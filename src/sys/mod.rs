@@ -7,6 +7,7 @@
 //! * `event`: a module with various helper functions for `Event`, see
 //!            [`crate::event::Event`] for the required functions.
 //! * `Events`: collection of `Event`s, see [`crate::Events`].
+//! * `IoSourceState`: state for the `IoSource` type.
 //! * `Selector`: selector used to register event sources and poll for events,
 //!               see [`crate::Poll`] and [`crate::Registry`] for required
 //!               methods.
@@ -50,15 +51,17 @@ macro_rules! debug_detail {
 
 #[cfg(unix)]
 pub use self::unix::{
-    event, Event, Events, Selector, SocketAddr, SourceFd, TcpListener, TcpStream, UdpSocket,
-    UnixDatagram, UnixListener, UnixStream, Waker,
+    event, Event, Events, IoSourceState, Selector, SocketAddr, SourceFd, TcpListener, TcpStream,
+    UdpSocket, UnixDatagram, UnixListener, UnixStream, Waker,
 };
 
 #[cfg(unix)]
 mod unix;
 
 #[cfg(windows)]
-pub use self::windows::{event, Event, Events, Selector, TcpListener, TcpStream, UdpSocket, Waker};
+pub use self::windows::{
+    event, Event, Events, IoSourceState, Selector, TcpListener, TcpStream, UdpSocket, Waker,
+};
 
 #[cfg(windows)]
 mod windows;

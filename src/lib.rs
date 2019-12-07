@@ -36,6 +36,7 @@
 )]
 
 mod interest;
+mod io_source;
 mod poll;
 mod sys;
 mod token;
@@ -47,6 +48,7 @@ pub mod net;
 #[doc(no_inline)]
 pub use event::Events;
 pub use interest::Interest;
+pub use io_source::IoSource;
 pub use poll::{Poll, Registry};
 pub use token::Token;
 pub use waker::Waker;
