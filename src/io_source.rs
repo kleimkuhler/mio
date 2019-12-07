@@ -6,6 +6,8 @@ use std::{fmt, io};
 
 #[cfg(unix)]
 use crate::poll;
+#[cfg(debug_assertions)]
+use crate::poll::SelectorId;
 use crate::sys::IoSourceState;
 use crate::{event, Interest, Registry, Token};
 
@@ -57,6 +59,8 @@ use crate::{event, Interest, Registry, Token};
 pub struct IoSource<T> {
     state: IoSourceState,
     inner: T,
+    #[cfg(debug_assertions)]
+    selector_id: SelectorId,
 }
 
 impl<T> IoSource<T> {
@@ -65,6 +69,8 @@ impl<T> IoSource<T> {
         IoSource {
             state: IoSourceState::new(),
             inner: io,
+            #[cfg(debug_assertions)]
+            selector_id: SelectorId::new(),
         }
     }
 
@@ -97,6 +103,8 @@ where
         token: Token,
         interests: Interest,
     ) -> io::Result<()> {
+        #[cfg(debug_assertions)]
+        self.selector_id.associate_selector(registry)?;
         poll::selector(registry).register(self.inner.as_raw_fd(), token, interests)
     }
 
@@ -125,6 +133,8 @@ where
         token: Token,
         interests: Interest,
     ) -> io::Result<()> {
+        #[cfg(debug_assertions)]
+        self.selector_id.associate_selector(registry)?;
         self.state
             .register(registry, token, interests, self.inner.as_raw_socket())
     }
