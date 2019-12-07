@@ -1,3 +1,4 @@
+use std::ops::{Deref, DerefMut};
 #[cfg(unix)]
 use std::os::unix::io::AsRawFd;
 #[cfg(windows)]
@@ -89,6 +90,40 @@ impl<T> IoSource<T> {
         F: FnOnce(&mut T) -> io::Result<R>,
     {
         self.state.do_io(f, &mut self.inner)
+    }
+
+    /// Returns the I/O source, dropping the state.
+    ///
+    /// # Notes
+    ///
+    /// To ensure no more events are to be received for this I/O source first
+    /// [`deregister`] it.
+    ///
+    /// [`deregister`]: Registry::deregister
+    pub fn into_inner(self) -> T {
+        self.inner
+    }
+}
+
+/// Be careful when using this method. All I/O operations that may block must go
+/// through the [`do_io`] method.
+///
+/// [`do_io`]: IoSource::do_io
+impl<T> Deref for IoSource<T> {
+    type Target = T;
+
+    fn deref(&self) -> &Self::Target {
+        &self.inner
+    }
+}
+
+/// Be careful when using this method. All I/O operations that may block must go
+/// through the [`do_io`] method.
+///
+/// [`do_io`]: IoSource::do_io
+impl<T> DerefMut for IoSource<T> {
+    fn deref_mut(&mut self) -> &mut Self::Target {
+        &mut self.inner
     }
 }
 
