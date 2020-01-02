@@ -40,7 +40,7 @@ cfg_os_poll! {
         pub(crate) use self::uds::{UnixDatagram, UnixListener, UnixStream};
     }
 
-    cfg_net! {
+    cfg_udp! {
         use std::io;
 
         // Both `kqueue` and `epoll` don't need to hold any user space state.

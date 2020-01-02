@@ -49,9 +49,11 @@ mod waker;
 pub mod event;
 
 cfg_net! {
-    mod io_source;
-
     pub mod net;
+}
+
+cfg_udp! {
+    mod io_source;
 }
 
 #[doc(no_inline)]

@@ -25,7 +25,7 @@ cfg_uds! {
     pub(crate) use self::uds::{UnixDatagram, UnixListener, UnixStream};
 }
 
-cfg_net! {
+cfg_udp! {
     use std::io;
 
     pub struct IoSourceState;
