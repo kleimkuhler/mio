@@ -308,6 +308,9 @@ impl Events {
                 if e.filter == libc::EVFILT_LIO {
                     event::kind_mut(&mut self.events[idx]).insert(UnixReady::lio());
                 }
+                if (e.filter & libc::EVFILT_WRITE != 0) && (e.flags & libc::EV_EOF != 0) {
+                    event::kind_mut(&mut self.events[idx]).insert(UnixReady::error());
+                }
             }
         }
 
