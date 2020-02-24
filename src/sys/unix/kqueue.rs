@@ -287,7 +287,7 @@ impl Events {
 
             }
 
-            if e.flags & libc::EV_ERROR != 0 {
+            if (e.flags & libc::EV_ERROR != 0) || (e.flags & libc::EV_EOF != 0) {
                 event::kind_mut(&mut self.events[idx]).insert(*UnixReady::error());
             }
 
